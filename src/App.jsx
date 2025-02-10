@@ -5,9 +5,7 @@ import { useGemini } from "./hooks/useGemini";
 function App() {
   const [userInput, setUserInput] = useState("");
 
-  const { responses, error, loading, chatAI } = useGemini(
-    "use max3 sencences and use bullet points"
-  );
+  const { responses, error, loading, chatAI } = useGemini();
 
   function handleChat(event) {
     event.preventDefault();

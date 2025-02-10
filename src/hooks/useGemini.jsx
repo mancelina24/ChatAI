@@ -7,44 +7,38 @@ export function useGemini() {
   );
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-  const [responeses, setResponses] = useState([]);
+  const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   function chatAI(prompt) {
     setLoading(true);
 
-    const newState = 
-    [
-            {  
-              role: "user",
-              text: prompt,
-            },
-            {
-              role: "model",
-            },
-          ],
-    
-          model.generateContent(prompt)
-          .then((response) => {
-            const newState = [...responeses, response.text()];
-            setResponses(newState);
-          })
-          .catch((error) => {
-            setError(error.message);
-          })
-          .finally(() => {
-            setLoading(false);
-            setError(null);
-          });
+    const newMessage = [
+      { role: "user", text: prompt },
+      { role: "model", text: "" }, // Prepare a placeholder for the model response
+    ];
 
-    
+    setResponses((prevResponses) => [...prevResponses, ...newMessage]);
 
+    model
+      .generateContent({ prompt }) // Pass the prompt as an object
+      .then((response) => {
+        setResponses((prevResponses) => [
+          ...prevResponses.slice(0, -1), // Remove the placeholder for model
+          { role: "model", text: response.text }, // Add the model's response
+        ]);
+      })
+      .catch((error) => {
+        setError(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+        setError(null);
+      });
 
-
-    setResponses([]);
     setLoading(false);
   }
 
-  return { responeses, loading, error, chatAI };
+  return { responses, loading, error, chatAI };
 }
