@@ -38,8 +38,6 @@ export function useGemini() {
         setLoading(false);
         setError(null);
       });
-
-    setLoading(false);
   }
 
   return { responses, loading, error, chatAI };
