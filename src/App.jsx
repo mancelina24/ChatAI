@@ -1,11 +1,18 @@
 import { useState } from "react";
 import "./App.css";
+import { useGemini } from "./hooks/useGemini";
 
 function App() {
   const [userInput, setUserInput] = useState("");
 
+  const { responses, error, loading, chatAI } = useGemini(
+    "use max3 sencences and use bullet points"
+  );
+
   function handleChat(event) {
     event.preventDefault();
+    chatAI(userInput);
+    setUserInput("");
   }
 
   function handleChange(event) {
@@ -18,32 +25,14 @@ function App() {
       <div className="response-container">
         <div class="response-container">
           <div class="messageBalloon user">
-            Tell me about san-francisco in 3 sentences. use bullet points and
-            highlight important words.
+            {responses.map((response) => (
+              <div className={`messageBalloon${response.role}`}>
+                {response.text}
+              </div>
+            ))}
           </div>
-          <div class="messageBalloon assistant">
-            <ul>
-              <li>
-                <strong>Iconic Landmark City:</strong> San Francisco is renowned
-                for <strong>Golden Gate Bridge</strong>,{" "}
-                <strong>Alcatraz Island</strong>, and steep{" "}
-                <strong>cable cars</strong>.
-              </li>
-              <li>
-                <strong>Vibrant Culture:</strong> A <strong>melting pot</strong>{" "}
-                of diverse cultures, San Francisco boasts{" "}
-                <strong>world-class museums</strong>,{" "}
-                <strong>culinary delights</strong>, and a thriving{" "}
-                <strong>LGBTQ+ community</strong>.
-              </li>
-              <li>
-                <strong>Tech Hub:</strong> Home to{" "}
-                <strong>Silicon Valley</strong>, San Francisco is a global
-                center for <strong>innovation</strong> and technological
-                advancements.
-              </li>
-            </ul>
-          </div>
+          {loading && <p>Loading</p>}
+          {error && <p>{error}</p>}
         </div>
       </div>
       <div className="input-container">
