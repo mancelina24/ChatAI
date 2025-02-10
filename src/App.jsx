@@ -21,14 +21,13 @@ function App() {
   return (
     <div className="content">
       <div className="response-container">
-        <div class="response-container">
-          <div class="messageBalloon user">
-            {responses.map((response) => (
-              <div className={`messageBalloon${response.role}`}>
-                {response.text}
-              </div>
-            ))}
-          </div>
+        <div className="response-container">
+          {responses.map((response, index) => (
+            <div key={index} className={`messageBalloon ${response.role}`}>
+              {response.text}
+            </div>
+          ))}
+
           {loading && <p>Loading</p>}
           {error && <p>{error}</p>}
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export function useGemini() {
@@ -16,18 +16,20 @@ export function useGemini() {
 
     const newMessage = [
       { role: "user", text: prompt },
-      { role: "model", text: "" }, // Prepare a placeholder for the model response
+      { role: "model", text: "" },
     ];
 
     setResponses((prevResponses) => [...prevResponses, ...newMessage]);
 
     model
-      .generateContent({ prompt }) // Pass the prompt as an object
+      .generateContent(prompt)
       .then((response) => {
-        setResponses((prevResponses) => [
-          ...prevResponses.slice(0, -1), // Remove the placeholder for model
-          { role: "model", text: response.text }, // Add the model's response
-        ]);
+        setResponses((prevResponses) => {
+          return [
+            ...prevResponses,
+            { role: "model", text: response.response.text() },
+          ];
+        });
       })
       .catch((error) => {
         setError(error.message);
